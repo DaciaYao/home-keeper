@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#4CAF50">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/assets/icons/icon.svg">
+<title>家庭管家</title>
+<link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <div class="appbar">
+    <h1>🏠 家庭管家</h1>
+    <div class="sub">厨房物品 + 衣橱穿搭 · 多家庭隔离 · 加密备份</div>
+  </div>
+
+  <!-- 顶部操作 -->
+  <div class="card">
+    <div class="btn-row">
+      <button class="btn" onclick="App.openCloudModal()">☁️ 云盘同步</button>
+      <button class="btn" onclick="App.exportData()">🔒 加密备份</button>
+      <button class="btn" onclick="App.checkUpdate()">🔄 检查更新</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('importFile').click()">📥 导入数据</button>
+      <input type="file" id="importFile" accept=".json" style="display:none">
+    </div>
+  </div>
+
+  <!-- 家庭空间 -->
+  <div class="card">
+    <h3>🏡 家庭空间</h3>
+    <div style="display:flex;gap:8px;margin-bottom:10px;">
+      <input type="text" id="newSpaceName" placeholder="输入家庭名称，如：兔宝宝的家" style="margin:0;">
+      <button class="btn" style="flex:0 0 auto;" onclick="App.onCreateSpace()">新建家庭</button>
+    </div>
+    <div id="familySpaces"></div>
+  </div>
+
+  <!-- 分类管理 -->
+  <div class="card">
+    <h3>📦 分类管理</h3>
+    <div id="categoriesList"></div>
+    <button class="btn btn-ghost btn-block" onclick="App.addCategory()">➕ 添加分类</button>
+  </div>
+
+  <!-- 快速添加 -->
+  <div class="card">
+    <h3>➕ 添加物品</h3>
+    <select id="addItemSpace"></select>
+    <select id="addItemType">
+      <option value="kitchen">🍳 厨房</option>
+      <option value="wardrobe">👔 衣橱</option>
+    </select>
+    <input type="text" id="addItemName" placeholder="物品名称，如：花椒油">
+    <select id="itemCategory"></select>
+    <input type="text" id="addItemTags" placeholder="标签（空格分隔），如：辛辣 麻 提香">
+    <button class="btn btn-block" id="addItemBtn">添加</button>
+  </div>
+
+  <!-- 查找 -->
+  <div class="card">
+    <h3>🔍 查找物品</h3>
+    <input type="text" id="searchInput" placeholder="输入名称或标签，如：辛辣" oninput="App.onSearch()">
+    <div id="searchResults"></div>
+  </div>
+
+</div>
+
+<!-- 云盘同步弹窗 -->
+<div class="modal" id="cloudModal">
+  <div class="modal-content">
+    <h2>☁️ 云盘同步</h2>
+
+    <div class="guide" id="guideTip">
+      <p><strong>当前自动同步的实用方案：</strong></p>
+      <ol>
+        <li>点上方「🔒 加密备份」导出加密文件 + 元数据。</li>
+        <li>把两个文件一起上传到你的网盘（坚果云 / 百度网盘 / 夸克均可）。</li>
+        <li>换设备时下载 `.enc.json`，点「📥 导入数据」即可恢复。</li>
+        <li>点「🔄 检查更新」选取网盘里的 meta 文件，比对版本与时间。</li>
+      </ol>
+      <div class="note">💡 坚果云填好信息后支持一键上传/下载；百度网盘因安全限制需后端服务，见「ARCHITECTURE.md」。</div>
+      <button class="btn btn-block" onclick="document.getElementById('guideTip').style.display='none';document.getElementById('realForm').style.display='block';">我了解了，继续配置</button>
+    </div>
+
+    <div id="realForm" style="display:none;">
+      <label style="font-size:13px;color:#666;">供应商</label>
+      <select id="cloudProvider">
+        <option value="jianguo">坚果云 (WebDAV)</option>
+        <option value="baidu">百度网盘 (OAuth)</option>
+      </select>
+
+      <!-- 坚果云 -->
+      <div id="jianguoFields">
+        <label style="font-size:13px;color:#666;">服务器地址</label>
+        <input type="text" id="serverAddr" value="https://dav.jianguoyun.com/">
+        <label style="font-size:13px;color:#666;">坚果云账号（邮箱）</label>
+        <input type="text" id="cloudUser" placeholder="your@email.com">
+        <label style="font-size:13px;color:#666;">应用专用密码（非登录密码）</label>
+        <input type="password" id="cloudPwd" placeholder="在坚果云安全设置里生成">
+        <p class="tip">💡 坚果云免费版：上传 1GB/月、下载 3GB/月，WebDAV 单文件上限 500MB。需在坚果云设置里开启 WebDAV。</p>
+      </div>
+
+      <!-- 百度网盘 -->
+      <div id="baiduFields" style="display:none;">
+        <label style="font-size:13px;color:#666;">百度 AppKey (Client ID)</label>
+        <input type="text" id="baiduAppKey" placeholder="去百度网盘开放平台申请">
+        <label style="font-size:13px;color:#666;">回调地址 (Redirect URI)</label>
+        <input type="text" id="baiduRedirect" placeholder="https://你的域名.netlify.app/callback">
+        <button class="btn btn-block" onclick="App.startBaiduAuth()">🔗 点击授权 (OAuth)</button>
+        <p class="tip">💡 百度网盘 OAuth 换 Token 必须走后端（Netlify Function），否则无法自动同步。当前建议用「加密备份」手动上传。</p>
+      </div>
+
+      <div class="btn-row" style="margin-top:14px;">
+        <button class="btn" onclick="App.saveCloudConfig()">💾 保存配置</button>
+        <button class="btn" onclick="App.testCloud()">测试连接</button>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="App.uploadCloud()">⬆️ 上传全部</button>
+        <button class="btn" onclick="App.downloadCloud()">⬇️ 下载全部</button>
+        <button class="btn btn-ghost" onclick="App.closeCloudModal()">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 安装横幅 -->
+<div class="install-banner" id="installBanner" style="display:none;">
+  <span>📱 添加到主屏幕，像 App 一样使用</span>
+  <button class="ib-install" onclick="App.install()">安装</button>
+  <button class="ib-dismiss" onclick="App.dismissInstall()">×</button>
+</div>
+
+<script src="/assets/js/store.js"></script>
+<script src="/assets/js/cloud.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+/* PWA 安装提示 */
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBanner').style.display = 'flex';
+});
+App.install = function() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => { document.getElementById('installBanner').style.display = 'none'; });
+  }
+};
+App.dismissInstall = function() { document.getElementById('installBanner').style.display = 'none'; };
+/* 注册 Service Worker */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js').catch(() => {});
+}
+</script>
+</body>
+</html>

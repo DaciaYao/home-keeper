@@ -1,0 +1,94 @@
+/* ============================================================
+ * style.css —— 手机优先、PC 自适应
+ * ============================================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+:root { --primary: #4CAF50; --primary-dark: #388E3C; --danger: #E53935; --bg: #f2f4f7; --card: #fff; --text: #222; --muted: #888; }
+html, body { height: 100%; }
+body {
+  font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.5;
+  font-size: 16px; /* 防止 iOS 自动放大 */
+}
+.wrap { max-width: 720px; margin: 0 auto; padding: 12px 12px 80px; }
+
+/* 顶部栏 */
+.appbar { background: var(--primary); color: #fff; padding: 16px 18px; border-radius: 0 0 16px 16px; box-shadow: 0 2px 10px rgba(0,0,0,.12); }
+.appbar h1 { font-size: 20px; display: flex; align-items: center; gap: 8px; }
+.appbar .sub { font-size: 12px; opacity: .9; margin-top: 2px; }
+
+/* 按钮 */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 10px 16px; border: none; border-radius: 10px; background: var(--primary); color: #fff; font-size: 15px; font-weight: 500; cursor: pointer; text-decoration: none; transition: opacity .15s; }
+.btn:active { opacity: .8; }
+.btn-sm { min-height: 36px; padding: 6px 12px; font-size: 14px; }
+.btn-ghost { background: #e8f5e9; color: var(--primary-dark); }
+.btn-danger { background: var(--danger); }
+.btn-block { width: 100%; }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn-row .btn { flex: 1 1 auto; }
+
+/* 卡片 */
+.card { background: var(--card); border-radius: 14px; padding: 16px; margin: 14px 0; box-shadow: 0 1px 6px rgba(0,0,0,.06); }
+.card h3 { font-size: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+
+/* 输入 */
+input, select, textarea { width: 100%; min-height: 44px; padding: 10px 12px; margin: 6px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; background: #fafafa; color: var(--text); }
+input:focus, select:focus { outline: none; border-color: var(--primary); background: #fff; }
+
+/* 家庭行 */
+.space-row { display: flex; align-items: center; gap: 8px; padding: 12px 0; border-bottom: 1px solid #eee; }
+.space-row:last-child { border-bottom: none; }
+.space-name { flex: 1; font-size: 16px; font-weight: 500; }
+.space-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* 分类 chip */
+.chip { display: inline-flex; align-items: center; gap: 4px; background: #eef6ee; color: var(--primary-dark); border-radius: 20px; padding: 6px 10px; margin: 4px; font-size: 13px; }
+.chip button { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 13px; padding: 0 2px; }
+
+/* 物品卡 */
+.item-card { display: flex; gap: 12px; padding: 12px; border-bottom: 1px solid #f0f0f0; }
+.item-card:last-child { border-bottom: none; }
+.item-card .thumb { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; cursor: pointer; background: #eee; }
+.item-body { flex: 1; min-width: 0; }
+.item-body strong { font-size: 15px; }
+.item-body .cat { display: inline-block; background: #f0f0f0; border-radius: 6px; padding: 1px 6px; font-size: 12px; color: var(--muted); margin-left: 6px; }
+.item-body .tags { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.tag { display: inline-block; background: #e8f5e9; color: var(--primary-dark); border-radius: 6px; padding: 1px 6px; font-size: 12px; margin-right: 4px; }
+.item-actions { display: flex; flex-direction: column; gap: 6px; }
+
+/* 搜索结果 */
+.search-item { padding: 10px; border-bottom: 1px solid #f0f0f0; }
+.search-item .from { font-size: 12px; color: var(--primary); }
+.search-item .tags { font-size: 12px; color: var(--muted); }
+
+.empty { color: var(--muted); font-size: 14px; padding: 12px 0; }
+
+/* 弹窗 */
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); align-items: center; justify-content: center; z-index: 1000; padding: 16px; }
+.modal.show { display: flex; }
+.modal-content { background: #fff; width: 100%; max-width: 440px; max-height: 90vh; overflow-y: auto; border-radius: 18px; padding: 22px; }
+.modal-content h2 { font-size: 18px; margin-bottom: 16px; }
+.modal-content .tip { font-size: 12px; color: var(--muted); margin-top: 10px; line-height: 1.6; }
+
+/* 引导页 */
+.guide ol { margin-left: 20px; font-size: 14px; line-height: 1.9; }
+.guide .note { background: #fff8e1; border-radius: 8px; padding: 10px; margin: 10px 0; font-size: 13px; }
+
+/* 安装横幅 */
+.install-banner { position: fixed; left: 0; right: 0; bottom: 0; background: var(--primary); color: #fff; padding: 14px 16px; display: flex; align-items: center; gap: 10px; z-index: 9999; font-size: 14px; }
+.install-banner button { min-height: 36px; padding: 6px 14px; border-radius: 8px; border: none; font-size: 14px; cursor: pointer; }
+.install-banner .ib-install { background: #fff; color: var(--primary-dark); font-weight: 600; }
+.install-banner .ib-dismiss { background: transparent; color: #fff; font-size: 20px; line-height: 1; }
+
+/* 二级页标题条 */
+.pagehead { display: flex; align-items: center; gap: 12px; background: #fff; padding: 14px 16px; border-radius: 14px; margin: 14px 0; box-shadow: 0 1px 6px rgba(0,0,0,.06); }
+.pagehead h2 { font-size: 17px; }
+.back { min-height: 36px; padding: 6px 12px; border: none; background: #eee; border-radius: 8px; cursor: pointer; }
+
+/* 拍照按钮 */
+.photo-btn { background: #eee; border: 1px dashed #bbb; border-radius: 10px; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; color: #555; }
+.photo-preview { width: 80px; height: 80px; object-fit: cover; border-radius: 10px; margin-top: 8px; }
+
+@media (min-width: 720px) {
+  .wrap { padding: 24px auto 80px; }
+  .appbar { border-radius: 0 0 24px 24px; }
+}

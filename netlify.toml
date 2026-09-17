@@ -1,0 +1,17 @@
+[build]
+  # 纯静态站点，无需构建命令
+  command = "echo 'static site, no build'"
+  publish = "."
+  functions = "netlify/functions"
+
+# 单页应用回退：刷新 /callback、/index.html 等路径不至于 404
+[[redirects]]
+  from = "/callback"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  conditions = { Role = ["visitor"] }

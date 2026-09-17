@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#4CAF50">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="/manifest.json">
+<title>厨房物品 · 家庭管家</title>
+<link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <div class="pagehead">
+    <button class="back" onclick="location.href='index.html'">← 返回</button>
+    <h2 id="pageTitle">🍳 厨房物品</h2>
+  </div>
+
+  <div class="card">
+    <div id="spaceBadge" style="font-weight:600;color:#4CAF50;margin-bottom:10px;"></div>
+    <input type="text" id="itemName" placeholder="食材名称，如：花椒油">
+    <select id="itemCategory">
+      <option>🧂 调料</option><option>🥬 蔬菜</option><option>🥩 肉类</option>
+      <option>🍚 主食</option><option>🌾 干货</option><option>🥤 饮品</option><option>🌶️ 辛辣</option>
+    </select>
+    <input type="text" id="itemTags" placeholder="标签（空格分隔），如：辛辣 麻 提香">
+    <label class="photo-btn" for="itemPhoto">📷 拍照 / 选图</label>
+    <input type="file" id="itemPhoto" accept="image/*" capture="environment" style="display:none">
+    <img id="photoPreview" class="photo-preview" style="display:none;">
+    <button class="btn btn-block" id="addBtn"><span id="addBtnText">添加食材</span></button>
+  </div>
+
+  <div class="card">
+    <div id="itemsList"></div>
+  </div>
+
+</div>
+
+<script src="/assets/js/store.js"></script>
+<script src="/assets/js/items-page.js"></script>
+<script>
+  document.getElementById('spaceBadge').textContent = '🏠 ' + (new URLSearchParams(location.search).get('name') || '');
+  document.getElementById('itemPhoto').addEventListener('change', function() {
+    const f = this.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = e => { const p = document.getElementById('photoPreview'); p.src = e.target.result; p.style.display = 'block'; };
+    r.readAsDataURL(f);
+  });
+  ItemsPage.init('kitchen');
+</script>
+</body>
+</html>

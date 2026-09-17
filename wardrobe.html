@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#4CAF50">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="/manifest.json">
+<title>衣橱穿搭 · 家庭管家</title>
+<link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <div class="pagehead">
+    <button class="back" onclick="location.href='index.html'">← 返回</button>
+    <h2 id="pageTitle">👔 衣橱穿搭</h2>
+  </div>
+
+  <div class="card">
+    <div id="spaceBadge" style="font-weight:600;color:#4CAF50;margin-bottom:10px;"></div>
+    <input type="text" id="itemName" placeholder="衣物名称，如：黑色羽绒服">
+    <select id="itemCategory">
+      <option>👕 上衣</option><option>👖 裤子</option><option>👗 裙子</option>
+      <option>🧥 外套</option><option>👟 鞋袜</option>
+    </select>
+    <input type="text" id="itemTags" placeholder="标签（空格分隔），如：保暖 百搭 黑色">
+    <select id="itemSeason">
+      <option>春</option><option>夏</option><option>秋</option><option>冬</option><option>四季</option>
+    </select>
+    <input type="text" id="itemSize" placeholder="尺码，如：L / 175">
+    <label class="photo-btn" for="itemPhoto">📷 拍照 / 选图</label>
+    <input type="file" id="itemPhoto" accept="image/*" capture="environment" style="display:none">
+    <img id="photoPreview" class="photo-preview" style="display:none;">
+    <button class="btn btn-block" id="addBtn"><span id="addBtnText">添加衣物</span></button>
+  </div>
+
+  <div class="card">
+    <div id="itemsList"></div>
+  </div>
+
+</div>
+
+<script src="/assets/js/store.js"></script>
+<script src="/assets/js/items-page.js"></script>
+<script>
+  document.getElementById('spaceBadge').textContent = '🏠 ' + (new URLSearchParams(location.search).get('name') || '');
+  document.getElementById('itemPhoto').addEventListener('change', function() {
+    const f = this.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = e => { const p = document.getElementById('photoPreview'); p.src = e.target.result; p.style.display = 'block'; };
+    r.readAsDataURL(f);
+  });
+  ItemsPage.init('wardrobe');
+</script>
+</body>
+</html>

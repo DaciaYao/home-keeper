@@ -1,0 +1,13 @@
+{
+  "name": "家庭管家",
+  "short_name": "家庭管家",
+  "description": "厨房物品管理 + 衣橱穿搭助手，支持家庭隔离、分类管理、标签搜索与加密备份",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4CAF50",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/assets/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
